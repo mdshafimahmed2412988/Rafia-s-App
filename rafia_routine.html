@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rafia's Plan">
+<title>Rafia's Comeback Plan 💪</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #7F77DD; --purple-light: #EEEDFE; --purple-dark: #3C3489;
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-dark: #085041;
+    --amber: #BA7517; --amber-light: #FAEEDA; --amber-dark: #633806;
+    --coral: #D85A30; --coral-light: #FAECE7; --coral-dark: #4A1B0C;
+    --green: #639922; --green-light: #EAF3DE; --green-dark: #27500A;
+    --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #042C53;
+    --gray-text: #2C2C2A; --gray-muted: #5F5E5A; --gray-border: rgba(0,0,0,0.12);
+    --bg: #f7f6f2; --card: #fff; --radius: 16px; --radius-sm: 10px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--gray-text); min-height: 100vh; padding-bottom: 80px; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, #7F77DD 0%, #534AB7 100%); padding: 48px 20px 24px; text-align: center; position: relative; }
+  .header-date { font-size: 12px; color: rgba(255,255,255,0.7); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .header-name { font-size: 26px; font-weight: 700; color: #fff; }
+  .header-sub { font-size: 14px; color: rgba(255,255,255,0.8); margin-top: 4px; }
+  .header-quote { background: rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 10px 16px; margin-top: 14px; font-size: 13px; color: #fff; font-style: italic; }
+  .progress-wrap { margin-top: 16px; }
+  .progress-label { font-size: 12px; color: rgba(255,255,255,0.75); margin-bottom: 6px; text-align: left; }
+  .progress-bar { background: rgba(255,255,255,0.25); border-radius: 999px; height: 8px; overflow: hidden; }
+  .progress-fill { background: #fff; border-radius: 999px; height: 100%; transition: width 0.5s ease; }
+
+  /* Day pills */
+  .days-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 16px 20px 4px; scrollbar-width: none; }
+  .days-scroll::-webkit-scrollbar { display: none; }
+  .day-pill { flex-shrink: 0; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--gray-border); background: var(--card); color: var(--gray-muted); transition: all 0.2s; }
+  .day-pill.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .day-pill.today { border-color: var(--purple); color: var(--purple); }
+  .day-pill.weekend { border-color: var(--amber); }
+  .day-pill.weekend.active { background: var(--amber); border-color: var(--amber); }
+
+  /* Section */
+  .section { padding: 0 20px; margin-top: 20px; }
+  .section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gray-muted); margin-bottom: 12px; }
+
+  /* Now card */
+  .now-card { background: var(--purple); border-radius: var(--radius); padding: 18px; color: #fff; position: relative; overflow: hidden; }
+  .now-card::after { content: ''; position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+  .now-label { font-size: 11px; opacity: 0.75; letter-spacing: 1px; text-transform: uppercase; }
+  .now-title { font-size: 20px; font-weight: 700; margin: 4px 0; }
+  .now-time { font-size: 13px; opacity: 0.85; }
+  .now-next { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 12px; opacity: 0.75; }
+
+  /* Schedule items */
+  .schedule-item { background: var(--card); border-radius: var(--radius-sm); border: 0.5px solid var(--gray-border); margin-bottom: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+  .schedule-item.done { opacity: 0.55; }
+  .schedule-item.active-now { border: 2px solid var(--purple); }
+  .sched-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+  .sched-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .sched-time { font-size: 12px; color: var(--gray-muted); min-width: 70px; }
+  .sched-name { font-size: 15px; font-weight: 500; flex: 1; }
+  .sched-icon { font-size: 18px; color: var(--gray-muted); }
+  .sched-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--gray-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+  .sched-check.checked { background: var(--green); border-color: var(--green); color: #fff; }
+  .sched-detail { padding: 0 16px 14px 16px; border-top: 0.5px solid var(--gray-border); font-size: 13px; color: var(--gray-muted); line-height: 1.6; display: none; }
+  .sched-detail.open { display: block; }
+
+  /* Call list */
+  .call-card { background: var(--card); border-radius: var(--radius-sm); border: 0.5px solid var(--gray-border); margin-bottom: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+  .call-num { font-size: 13px; font-weight: 500; flex: 1; }
+  .call-name { font-size: 12px; color: var(--gray-muted); }
+  .call-btn { background: var(--teal-light); color: var(--teal-dark); border: none; border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .call-done-btn { background: var(--green-light); color: var(--green-dark); border: none; border-radius: 8px; padding: 7px 10px; font-size: 13px; cursor: pointer; flex-shrink: 0; margin-left: 4px; }
+  .agency-check { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--gray-border); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 10px; }
+  .agency-check.called { background: var(--green); border-color: var(--green); color: #fff; }
+
+  /* Learn cards */
+  .learn-card { background: var(--card); border-radius: var(--radius-sm); border: 0.5px solid var(--gray-border); margin-bottom: 10px; padding: 14px; }
+  .learn-day-tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; display: inline-block; margin-bottom: 8px; }
+  .learn-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .learn-desc { font-size: 13px; color: var(--gray-muted); line-height: 1.6; margin-bottom: 10px; }
+  .learn-link { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); font-size: 13px; font-weight: 500; text-decoration: none; margin-bottom: 6px; }
+  .learn-task { background: var(--bg); border-radius: 8px; padding: 10px; margin-top: 8px; }
+  .learn-task-title { font-size: 12px; font-weight: 600; color: var(--gray-text); margin-bottom: 6px; }
+  .task-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--gray-muted); cursor: pointer; }
+  .task-check { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--gray-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .task-check.done { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+  /* Motivation section */
+  .motivation-card { background: linear-gradient(135deg, var(--teal-light), var(--blue-light)); border-radius: var(--radius); padding: 18px; border: 0.5px solid var(--gray-border); margin-bottom: 12px; }
+  .motivation-card h3 { font-size: 16px; font-weight: 600; color: var(--teal-dark); margin-bottom: 8px; }
+  .motivation-card p { font-size: 13px; color: var(--gray-muted); line-height: 1.6; }
+  .affirmation { font-size: 16px; font-weight: 500; color: var(--purple-dark); background: var(--purple-light); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px; text-align: center; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .stat-box { background: #fff; border-radius: var(--radius-sm); padding: 12px; text-align: center; border: 0.5px solid var(--gray-border); }
+  .stat-num { font-size: 24px; font-weight: 700; color: var(--purple); }
+  .stat-label { font-size: 11px; color: var(--gray-muted); margin-top: 2px; }
+
+  /* Tabs */
+  .tab-bar { display: flex; background: var(--card); border-radius: var(--radius); margin: 0 20px; padding: 4px; border: 0.5px solid var(--gray-border); margin-bottom: 4px; }
+  .tab-btn { flex: 1; padding: 10px 4px; border: none; border-radius: 12px; background: transparent; font-size: 13px; font-weight: 500; color: var(--gray-muted); cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .tab-btn i { font-size: 18px; }
+  .tab-btn.active { background: var(--purple-light); color: var(--purple-dark); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .weekend-notice { background: var(--amber-light); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px; font-size: 13px; color: var(--amber-dark); line-height: 1.5; }
+  .tip-box { background: var(--teal-light); border-radius: var(--radius-sm); padding: 12px; font-size: 13px; color: var(--teal-dark); margin-top: 10px; line-height: 1.5; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-left: 6px; }
+  .badge-am { background: var(--blue-light); color: var(--blue-dark); }
+  .badge-pm { background: var(--coral-light); color: var(--coral-dark); }
+  .badge-wkd { background: var(--amber-light); color: var(--amber-dark); }
+
+  .script-box { background: var(--purple-light); border-radius: var(--radius-sm); padding: 12px; margin-top: 10px; font-size: 13px; color: var(--purple-dark); font-style: italic; line-height: 1.6; }
+  .script-box strong { font-style: normal; font-weight: 600; display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--purple); }
+
+  .overflow-count { text-align: center; padding: 10px; font-size: 13px; color: var(--gray-muted); cursor: pointer; }
+  .overflow-count span { color: var(--purple); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-date" id="header-date"></div>
+  <div class="header-name">Rafia's Comeback 💪</div>
+  <div class="header-sub">19 June – 30 June 2025</div>
+  <div class="header-quote" id="daily-quote"></div>
+  <div class="progress-wrap">
+    <div class="progress-label" id="progress-label">Overall progress</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
+  </div>
+</div>
+
+<!-- Day selector -->
+<div class="days-scroll" id="days-scroll"></div>
+
+<!-- Tabs -->
+<div class="tab-bar" style="margin-top: 8px;">
+  <button class="tab-btn active" onclick="switchTab('schedule')" id="tab-schedule">
+    <i class="ti ti-calendar" aria-hidden="true"></i>Schedule
+  </button>
+  <button class="tab-btn" onclick="switchTab('calls')" id="tab-calls">
+    <i class="ti ti-phone" aria-hidden="true"></i>Call List
+  </button>
+  <button class="tab-btn" onclick="switchTab('learn')" id="tab-learn">
+    <i class="ti ti-book" aria-hidden="true"></i>Learning
+  </button>
+  <button class="tab-btn" onclick="switchTab('motivate')" id="tab-motivate">
+    <i class="ti ti-heart" aria-hidden="true"></i>Motivation
+  </button>
+</div>
+
+<!-- SCHEDULE TAB -->
+<div id="content-schedule" class="tab-content active">
+  <div class="section">
+    <div id="now-card-container"></div>
+    <div class="section-title" style="margin-top: 18px;">Today's routine</div>
+    <div id="schedule-list"></div>
+  </div>
+</div>
+
+<!-- CALLS TAB -->
+<div id="content-calls" class="tab-content">
+  <div class="section">
+    <div id="call-content"></div>
+  </div>
+</div>
+
+<!-- LEARN TAB -->
+<div id="content-learn" class="tab-content">
+  <div class="section">
+    <div id="learn-content"></div>
+  </div>
+</div>
+
+<!-- MOTIVATE TAB -->
+<div id="content-motivate" class="tab-content">
+  <div class="section">
+    <div id="motivate-content"></div>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  { date: '2025-06-19', label: 'Fri 19', isWeekend: true },
+  { date: '2025-06-20', label: 'Sat 20', isWeekend: true },
+  { date: '2025-06-21', label: 'Sun 21', isWeekend: true },
+  { date: '2025-06-22', label: 'Mon 22', isWeekend: false },
+  { date: '2025-06-23', label: 'Tue 23', isWeekend: false },
+  { date: '2025-06-24', label: 'Wed 24', isWeekend: false },
+  { date: '2025-06-25', label: 'Thu 25', isWeekend: false },
+  { date: '2025-06-26', label: 'Fri 26', isWeekend: false },
+  { date: '2025-06-27', label: 'Sat 27', isWeekend: true },
+  { date: '2025-06-28', label: 'Sun 28', isWeekend: true },
+  { date: '2025-06-29', label: 'Mon 29', isWeekend: false },
+  { date: '2025-06-30', label: 'Tue 30', isWeekend: false },
+];
+
+const SCHEDULE = [
+  { time: '8:30', label: 'Wake up & morning ritual', icon: 'ti-sun', color: '#EF9F27', detail: 'Wake up gently. No rushing. Make a cup of tea, splash your face, breathe. This is YOUR time. No phone scrolling for the first 15 minutes — just be present with yourself.', type: 'self' },
+  { time: '9:00', label: 'Call agencies (Batch 1)', icon: 'ti-phone', color: '#7F77DD', detail: 'Call 25 agencies from your list. Be confident — you have 3 years UK work experience! Keep your phone charged, have a notepad ready. See the Call List tab for all numbers.', type: 'call' },
+  { time: '11:00', label: 'Breakfast + free time', icon: 'ti-coffee', color: '#1D9E75', detail: 'Eat a proper breakfast — not just a biscuit! Then take a walk outside, even 10–15 minutes. Fresh air resets your mood. You can use your phone, chat, listen to music. Fully relax.', type: 'self' },
+  { time: '13:00', label: 'Call agencies (Batch 2)', icon: 'ti-phone', color: '#7F77DD', detail: 'Next 25 agencies from your list. Weekends: call cash-in-hand employers — takeaways, cafes, shops. See the Call List tab for weekend numbers.', type: 'call' },
+  { time: '15:00', label: 'Shower + self-care + lunch', icon: 'ti-heart', color: '#D4537E', detail: 'Have a lovely shower. Do your skincare, hair, anything that makes you feel good. Then eat a proper lunch. You deserve to feel good every single day — not just when things go right.', type: 'self' },
+  { time: '17:00', label: 'Exercise (1 hour)', icon: 'ti-run', color: '#639922', detail: 'Move your body for 1 hour. This is non-negotiable for your mental health. Try: a 30-min walk + 15 min home workout (YouTube: "Chloe Ting 15 min no equipment" is great and FREE). Or dance to your favourite songs. Exercise releases feel-good chemicals. You WILL feel better after.', type: 'self' },
+  { time: '18:00', label: 'Digital marketing skills (3hrs)', icon: 'ti-device-laptop', color: '#185FA5', detail: 'This is your power hour — actually 3 hours! Follow the weekly learning plan in the Learning tab. Have snacks nearby. Turn off notifications. This skill will change your career.', type: 'learn' },
+  { time: '21:00', label: 'Dinner', icon: 'ti-soup', color: '#D85A30', detail: 'Cook or order something you enjoy. Sit down to eat properly — no rushing. This is wind-down time.', type: 'self' },
+  { time: '22:00', label: 'Me time + bed prep', icon: 'ti-moon', color: '#534AB7', detail: 'Wind down fully. Phone, TV, a book, chatting — whatever you enjoy. Try not to scroll stressful content. Write 3 things you did well today in your notes. Then sleep — your mind and body need to recover. You are doing amazing. Rest is productive.', type: 'self' },
+];
+
+const AGENCIES_WEEKDAY = [
+  { name: 'Reed Recruitment Birmingham', num: '0121 200 5520', type: 'General' },
+  { name: 'Blue Arrow Birmingham', num: '0121 236 5001', type: 'Hospitality/Events' },
+  { name: 'Hays Birmingham', num: '0121 236 6160', type: 'General' },
+  { name: 'Robert Half Birmingham', num: '0121 616 4600', type: 'General' },
+  { name: 'Starting Point Recruitment', num: '0121 440 0100', type: 'Hospitality' },
+  { name: 'Arc Hospitality Recruitment', num: '0121 233 9044', type: 'Hospitality/Events' },
+  { name: 'Jubilee Hospitality Birmingham', num: '0121 448 4848', type: 'Hospitality' },
+  { name: 'Push Promotions UK', num: '0121 392 8963', type: 'Events/Hospitality' },
+  { name: 'KSB Recruitment Consultants', num: '01489 774 010', type: 'Catering' },
+  { name: 'Manpower Birmingham', num: '0121 643 6911', type: 'General' },
+  { name: 'Adecco Birmingham', num: '0121 631 4448', type: 'General' },
+  { name: 'Randstad Birmingham', num: '0121 200 5559', type: 'General' },
+  { name: 'Michael Page Birmingham', num: '0121 230 9470', type: 'General' },
+  { name: 'Pertemps Birmingham', num: '0121 452 8851', type: 'General/Hospitality' },
+  { name: 'Search Consultancy Birmingham', num: '0121 212 7790', type: 'General' },
+  { name: 'Brook Street Birmingham', num: '0121 643 2155', type: 'Admin/Customer Service' },
+  { name: 'Staffline Birmingham', num: '0121 702 1560', type: 'General' },
+  { name: 'Taskmaster Resources', num: '0121 544 6699', type: 'General' },
+  { name: 'Meridian Business Support', num: '0121 616 0200', type: 'General' },
+  { name: 'Inplace Personnel', num: '0121 585 5991', type: 'General' },
+  { name: 'SF Recruitment Birmingham', num: '0121 233 1006', type: 'Customer Service' },
+  { name: 'Advantage Resourcing', num: '0121 234 0800', type: 'General' },
+  { name: 'Cordant People Birmingham', num: '0121 616 2700', type: 'General' },
+  { name: 'Gi Group Birmingham', num: '0121 643 1531', type: 'General' },
+  { name: 'Pure Resourcing Birmingham', num: '0121 212 0550', type: 'Admin/Support' },
+];
+
+const AGENCIES_WEEKEND = [
+  { name: 'Selly Oak Road Takeaway row (ask in person)', num: '0121 471 XXXX', note: 'Ask: "Do you need part-time weekend staff? I can start immediately."', type: 'Cash/Weekend' },
+  { name: 'Sparkbrook & Stratford Rd restaurants', num: 'Walk in', note: 'Best approach: walk in between 2–5pm. Bring a CV printed out.', type: 'Cash/Weekend' },
+  { name: 'Alum Rock Road shops/cafes', num: 'Walk in', note: 'Lots of South Asian owned businesses — good community connection.', type: 'Cash/Weekend' },
+  { name: 'Small Heath restaurants (Coventry Rd)', num: 'Walk in', note: 'Busy weekend trade — likely needing extra staff.', type: 'Cash/Weekend' },
+  { name: 'Ladywood & City Centre cafes', num: 'Walk in / 0121 643 XXXX', note: 'City centre always busy on weekends. Try coffee shops too.', type: 'Cash/Weekend' },
+  { name: 'Edgbaston Village restaurants', num: 'Walk in', note: 'Upmarket area — good for weekend brunch/lunch positions.', type: 'Cash/Weekend' },
+  { name: 'Moseley Village cafes & restaurants', num: 'Walk in', note: 'Moseley is very active on weekends. Independent shops love local staff.', type: 'Cash/Weekend' },
+  { name: 'Kings Heath High St businesses', num: 'Walk in', note: 'Active local high street — try bakeries, cafes, restaurants.', type: 'Cash/Weekend' },
+  { name: 'Harborne High St restaurants', num: 'Walk in', note: 'Popular weekend dining area — ask directly at the door.', type: 'Cash/Weekend' },
+  { name: 'Brindleyplace / Broad St venues', num: '0121 643 1234', note: 'Weekend nightlife & dining hotspot. Events, bars, restaurants all here.', type: 'Cash/Weekend' },
+  { name: 'Digbeth food scene', num: 'Walk in', note: 'Digbeth has markets, street food, creative venues — very open to walk-ins.', type: 'Cash/Weekend' },
+  { name: 'Jewellery Quarter restaurants', num: 'Walk in', note: 'Growing area. Weekend brunch culture strong here.', type: 'Cash/Weekend' },
+];
+
+const PHONE_SCRIPT = `"Hi, my name is Rafia. I'm calling to register with your agency. I have over 3 years of work experience in the UK in hospitality and customer service. I'm available part-time and can start immediately. Could I speak with someone about registering as a candidate or finding available shifts?"`;
+
+const LEARNING_PLAN = [
+  {
+    week: 'Days 1–2 (Fri–Sat)',
+    topic: 'The Big Picture: What is Digital Marketing?',
+    color: 'purple',
+    colorVal: '#7F77DD',
+    bgVal: '#EEEDFE',
+    desc: 'Understand the full digital marketing landscape. What channels exist, how they connect, and where you can specialise. By the end, you\'ll know what a digital marketer actually does — and you\'re already doing some of it.',
+    resources: [
+      { label: 'Google Digital Marketing (FREE, certified)', url: 'https://skillshop.exceedlms.com/student/collection/1830706-fundamentals-of-digital-marketing', note: 'Start Module 1–3 today. 40 hrs total. Free certificate!' },
+      { label: 'YouTube: "Digital Marketing for Beginners" (Simplilearn)', url: 'https://www.youtube.com/results?search_query=digital+marketing+for+beginners+simplilearn+2024', note: 'Watch the first hour — great visual overview' },
+    ],
+    tasks: ['Sign up to Google Skillshop (free)', 'Complete Module 1 + 2', 'Write 5 things you learned in your notes app', 'Watch 1 YouTube intro video'],
+  },
+  {
+    week: 'Days 3–4 (Sun–Mon)',
+    topic: 'Social Media Marketing Deep Dive',
+    color: 'teal',
+    colorVal: '#1D9E75',
+    bgVal: '#E1F5EE',
+    desc: 'Social media is where businesses are won and lost. Learn how to create content, understand algorithms, and build an audience — skills that are in HUGE demand right now.',
+    resources: [
+      { label: 'Meta Blueprint (Facebook/Instagram – FREE)', url: 'https://www.facebook.com/business/learn', note: 'Free certified courses from Meta themselves' },
+      { label: 'HubSpot Social Media Certification (FREE)', url: 'https://academy.hubspot.com/courses/social-media', note: 'Industry-respected free certificate' },
+      { label: 'YouTube: "Social Media Marketing Course 2024"', url: 'https://www.youtube.com/results?search_query=social+media+marketing+full+course+2024+free', note: '3–4 hr free full course available' },
+    ],
+    tasks: ['Complete Google Skillshop Modules 3–5', 'Sign up for Meta Blueprint', 'Create a practice Instagram page for a fake brand', 'Plan 5 social media posts for your fake brand', 'Start HubSpot Social Media course'],
+  },
+  {
+    week: 'Days 5–6 (Tue–Wed)',
+    topic: 'SEO & Content Marketing',
+    color: 'blue',
+    colorVal: '#185FA5',
+    bgVal: '#E6F1FB',
+    desc: 'SEO (Search Engine Optimisation) is how businesses get found on Google for FREE. Every business needs this. Content marketing is how you build trust and attract customers through writing, video, and social posts.',
+    resources: [
+      { label: 'Moz SEO Learning Center (FREE)', url: 'https://moz.com/beginners-guide-to-seo', note: 'The most trusted free SEO guide on the internet' },
+      { label: 'Google Search Central (FREE, from Google itself)', url: 'https://developers.google.com/search/docs/fundamentals/how-search-works', note: 'Learn exactly how Google ranking works' },
+      { label: 'HubSpot Content Marketing Cert (FREE)', url: 'https://academy.hubspot.com/courses/content-marketing', note: 'Free globally-recognised certificate' },
+    ],
+    tasks: ['Complete Google Skillshop Modules 6–8', 'Read Moz Beginner SEO Guide (chapters 1–3)', 'Write a 200-word blog post on any topic using SEO tips', 'Start HubSpot Content Marketing course'],
+  },
+  {
+    week: 'Days 7–8 (Thu–Fri)',
+    topic: 'Email Marketing & Analytics',
+    color: 'amber',
+    colorVal: '#BA7517',
+    bgVal: '#FAEEDA',
+    desc: 'Email marketing gives the highest return of any marketing channel — £42 back for every £1 spent. Google Analytics tells you what\'s working and what\'s not. These two skills together make you very hireable.',
+    resources: [
+      { label: 'Mailchimp Academy (FREE)', url: 'https://mailchimp.com/resources/mailchimp-101/', note: 'Learn email marketing from the biggest platform — free' },
+      { label: 'Google Analytics for Beginners (FREE)', url: 'https://skillshop.exceedlms.com/student/path/2938', note: 'Free Google course — add it to your LinkedIn' },
+      { label: 'YouTube: "Google Analytics 4 Tutorial 2024"', url: 'https://www.youtube.com/results?search_query=google+analytics+4+tutorial+beginners+2024', note: 'Visual walkthrough — very clear' },
+    ],
+    tasks: ['Complete Google Skillshop Modules 9–11', 'Sign up for Mailchimp free account', 'Create your first practice email campaign', 'Start Google Analytics for Beginners course', 'Explore GA4 demo account'],
+  },
+  {
+    week: 'Days 9–10 (Sat–Sun)',
+    topic: 'Paid Ads + Putting It All Together',
+    color: 'coral',
+    colorVal: '#D85A30',
+    bgVal: '#FAECE7',
+    desc: 'Google Ads and Meta Ads are how businesses pay to reach customers fast. Even if you don\'t run ads yet, understanding how they work makes you a complete digital marketer. Today you\'ll also start building your portfolio.',
+    resources: [
+      { label: 'Google Ads Certification (FREE)', url: 'https://skillshop.exceedlms.com/student/catalog/list?category_ids=53-google-ads-certifications', note: 'Free, globally recognised — gold on a CV' },
+      { label: 'Meta Ads Manager Tutorial (FREE)', url: 'https://www.facebook.com/business/learn/lessons/get-started-with-ads-manager', note: 'Learn how Facebook/Instagram ads work' },
+      { label: 'Canva for Social Media (FREE tool)', url: 'https://www.canva.com', note: 'Design professional posts — free forever plan' },
+    ],
+    tasks: ['Complete Google Skillshop Modules 12–14', 'Start Google Ads Certification', 'Create 3 social media graphics in Canva for your practice brand', 'Write a summary of everything you learned this week', 'Update your LinkedIn with new skills'],
+  },
+  {
+    week: 'Days 11–12 (Mon–Tue, 30 June)',
+    topic: 'Freelance & Portfolio Building',
+    color: 'green',
+    colorVal: '#639922',
+    bgVal: '#EAF3DE',
+    desc: 'By now you have real knowledge. Time to show it. Build a simple online portfolio, set up a Fiverr profile, and start looking for digital marketing assistant roles — not just restaurant work. Your skills are growing fast!',
+    resources: [
+      { label: 'Fiverr (earn freelance income)', url: 'https://www.fiverr.com', note: 'Create a gig: "I will manage your social media" — start earning!' },
+      { label: 'Canva Portfolio Template (free)', url: 'https://www.canva.com/portfolios/', note: 'Build a beautiful free portfolio in under an hour' },
+      { label: 'Indeed Digital Marketing Jobs Birmingham', url: 'https://uk.indeed.com/jobs?q=digital+marketing+assistant&l=Birmingham', note: 'Apply now — you have real skills to show!' },
+      { label: 'LinkedIn: optimise your profile', url: 'https://www.linkedin.com', note: 'Add all your new certificates to your LinkedIn profile' },
+    ],
+    tasks: ['Complete Google Skillshop final modules', 'Set up a Fiverr profile', 'Build a simple portfolio (Canva or Google Sites)', 'Apply to 3–5 digital marketing assistant roles', 'Celebrate! You completed 12 days of hard work 🎉'],
+  },
+];
+
+const QUOTES = [
+  "Every call is one step closer. Every 'no' is practice for the 'yes'. — Keep going, Rafia 🌟",
+  "Your soft heart is your superpower. The right people will see it. Keep going.",
+  "You are not starting from zero. You are starting from experience.",
+  "Three years of UK work experience is something to be proud of. Own it.",
+  "The comeback is always stronger than the setback.",
+  "Every skill you learn today is a door that opens tomorrow.",
+  "You belong here. Birmingham is lucky to have you.",
+  "Small daily actions create massive life changes.",
+  "Rejection is redirection. Your opportunity is on the way.",
+  "You are building something beautiful — one day at a time.",
+  "Show up for yourself. Nobody can do that but you.",
+  "Rest is not giving up. Rest is recharging.",
+];
+
+const AFFIRMATIONS = [
+  "I am worthy of good work and good pay.",
+  "My background is my strength, not my weakness.",
+  "I am building skills that will serve me for life.",
+  "Every 'no' is moving me closer to my perfect 'yes'.",
+  "I am resilient, capable, and unstoppable.",
+  "I choose to show up for myself today.",
+  "My effort today is an investment in my future.",
+];
+
+let state = { selectedDay: 0, tab: 'schedule', checked: {}, called: {}, tasksDone: {} };
+function save() { try { localStorage.setItem('rafia_state', JSON.stringify(state)); } catch(e) {} }
+function load() { try { const s = localStorage.getItem('rafia_state'); if(s) { const p = JSON.parse(s); state.checked = p.checked || {}; state.called = p.called || {}; state.tasksDone = p.tasksDone || {}; } } catch(e) {} }
+load();
+
+function getTime() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+function timeToMins(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + (m || 0);
+}
+
+function getCurrentSlot() {
+  const now = getTime();
+  let current = -1;
+  for (let i = 0; i < SCHEDULE.length; i++) {
+    const start = timeToMins(SCHEDULE[i].time);
+    const end = i < SCHEDULE.length - 1 ? timeToMins(SCHEDULE[i+1].time) : 24*60;
+    if (now >= start && now < end) { current = i; break; }
+  }
+  return current;
+}
+
+function renderDays() {
+  const today = new Date().toISOString().split('T')[0];
+  const scroll = document.getElementById('days-scroll');
+  scroll.innerHTML = '';
+  DAYS.forEach((d, i) => {
+    const pill = document.createElement('div');
+    pill.className = 'day-pill' + (d.isWeekend ? ' weekend' : '') + (i === state.selectedDay ? ' active' : '') + (d.date === today ? ' today' : '');
+    pill.textContent = d.label;
+    pill.onclick = () => { state.selectedDay = i; renderAll(); };
+    scroll.appendChild(pill);
+  });
+}
+
+function renderNowCard() {
+  const slot = getCurrentSlot();
+  const isToday = DAYS[state.selectedDay].date === new Date().toISOString().split('T')[0];
+  const container = document.getElementById('now-card-container');
+  if (!isToday || slot < 0) { container.innerHTML = ''; return; }
+  const item = SCHEDULE[slot];
+  const next = slot < SCHEDULE.length - 1 ? SCHEDULE[slot + 1] : null;
+  container.innerHTML = `
+    <div class="now-card">
+      <div class="now-label">Right now</div>
+      <div class="now-title"><i class="ti ${item.icon}" aria-hidden="true" style="margin-right:6px"></i>${item.label}</div>
+      <div class="now-time">Started at ${item.time}</div>
+      ${next ? `<div class="now-next">Next at ${next.time}: ${next.label}</div>` : ''}
+    </div>
+  `;
+}
+
+function toggleItem(i) {
+  const key = `${state.selectedDay}-${i}`;
+  state.checked[key] = !state.checked[key];
+  save();
+  renderSchedule();
+  renderProgress();
+}
+
+function toggleDetail(i) {
+  const el = document.getElementById('detail-' + i);
+  if (el) el.classList.toggle('open');
+}
+
+function renderSchedule() {
+  const day = DAYS[state.selectedDay];
+  const isWeekend = day.isWeekend;
+  const list = document.getElementById('schedule-list');
+  const slot = getCurrentSlot();
+  const isToday = day.date === new Date().toISOString().split('T')[0];
+
+  list.innerHTML = SCHEDULE.map((item, i) => {
+    const key = `${state.selectedDay}-${i}`;
+    const done = !!state.checked[key];
+    const isNow = isToday && slot === i;
+    let detailContent = item.detail;
+    if (item.type === 'call') {
+      detailContent += isWeekend
+        ? '<br><br><strong style="color:var(--amber)">Weekend:</strong> Focus on cash-in-hand employers. Walk in or call local restaurants, cafes, takeaways. See Call List tab for weekend targets.'
+        : '<br><br>See the <strong>Call List</strong> tab for all agency names and numbers with one-tap calling!';
+    }
+    if (item.type === 'learn') {
+      detailContent += '<br><br>See the <strong>Learning</strong> tab for your day-by-day plan, video links, and task checklist.';
+    }
+    return `
+      <div class="schedule-item ${done ? 'done' : ''} ${isNow ? 'active-now' : ''}">
+        <div class="sched-header" onclick="toggleDetail(${i})">
+          <div class="sched-dot" style="background:${item.color}"></div>
+          <div class="sched-time">${item.time}</div>
+          <div class="sched-name">${item.label}</div>
+          <i class="ti ${item.icon} sched-icon" aria-hidden="true"></i>
+          <div class="sched-check ${done ? 'checked' : ''}" onclick="event.stopPropagation(); toggleItem(${i})">
+            ${done ? '<i class="ti ti-check" style="font-size:12px"></i>' : ''}
+          </div>
+        </div>
+        <div class="sched-detail ${isNow ? 'open' : ''}" id="detail-${i}">${detailContent}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderProgress() {
+  let total = 0, done = 0;
+  DAYS.forEach((d, di) => {
+    SCHEDULE.forEach((s, si) => {
+      total++;
+      if (state.checked[`${di}-${si}`]) done++;
+    });
+  });
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Overall: ${done}/${total} tasks completed (${pct}%)`;
+}
+
+function toggleCalled(id) {
+  state.called[id] = !state.called[id];
+  save();
+  renderCalls();
+}
+
+function renderCalls() {
+  const day = DAYS[state.selectedDay];
+  const isWeekend = day.isWeekend;
+  const agencies = isWeekend ? AGENCIES_WEEKEND : AGENCIES_WEEKDAY;
+  const calledCount = agencies.filter((a, i) => state.called[`${isWeekend ? 'w' : 'd'}-${i}`]).length;
+
+  let html = '';
+
+  if (isWeekend) {
+    html += `<div class="weekend-notice">
+      <strong>Weekend plan 🛍️</strong><br>
+      On weekends, focus on <strong>cash-in-hand</strong> jobs. Walk into local restaurants, takeaways, cafes, and shops. Best time to walk in: <strong>2pm–5pm</strong> (after lunch rush, before dinner). Bring a printed CV!
+    </div>`;
+  } else {
+    html += `<div class="script-box"><strong>Phone script:</strong>${PHONE_SCRIPT}</div>`;
+    html += `<div class="tip-box" style="margin-bottom: 12px;">✅ Called so far today: <strong>${calledCount} / ${agencies.length}</strong>. Aim for all 25 by 3pm!</div>`;
+  }
+
+  html += `<div class="section-title">${isWeekend ? 'Weekend Targets' : 'Weekday Agencies'} (${agencies.length} total)</div>`;
+
+  agencies.forEach((a, i) => {
+    const id = `${isWeekend ? 'w' : 'd'}-${i}`;
+    const done = !!state.called[id];
+    html += `
+      <div class="call-card" style="${done ? 'opacity:0.5' : ''}">
+        <div class="agency-check ${done ? 'called' : ''}" onclick="toggleCalled('${id}')">
+          ${done ? '<i class="ti ti-check" style="font-size:10px"></i>' : ''}
+        </div>
+        <div style="flex:1">
+          <div class="call-num">${a.name}</div>
+          <div class="call-name">${a.type}${a.note ? ' • ' + a.note : ''}</div>
+        </div>
+        ${a.num !== 'Walk in' ? `<a class="call-btn" href="tel:${a.num.replace(/\s/g,'')}"><i class="ti ti-phone" style="font-size:14px"></i>Call</a>` : `<div class="call-btn" style="background:var(--amber-light);color:var(--amber-dark)"><i class="ti ti-walk" style="font-size:14px"></i>Visit</div>`}
+      </div>
+    `;
+  });
+
+  document.getElementById('call-content').innerHTML = html;
+}
+
+function toggleTask(key) {
+  state.tasksDone[key] = !state.tasksDone[key];
+  save();
+  renderLearn();
+}
+
+function renderLearn() {
+  const dayIndex = state.selectedDay;
+  // Find which week plan is active
+  const planMap = [0,0,1,1,2,2,3,3,4,4,5,5]; // day index -> plan index
+  const activePlan = planMap[dayIndex];
+
+  let html = `<div class="section-title">12-day digital marketing plan</div>`;
+
+  LEARNING_PLAN.forEach((plan, pi) => {
+    const isActive = pi === activePlan;
+    const tasksDoneCount = plan.tasks.filter((t, ti) => state.tasksDone[`plan-${pi}-${ti}`]).length;
+    html += `
+      <div class="learn-card" style="${isActive ? 'border: 2px solid ' + plan.colorVal : ''}">
+        <div class="learn-day-tag" style="background:${plan.bgVal};color:${plan.colorVal}">${plan.week}</div>
+        ${isActive ? '<span style="font-size:11px;font-weight:600;color:'+plan.colorVal+';float:right;padding:3px 8px;background:'+plan.bgVal+';border-radius:999px;margin-top:-2px">TODAY</span>' : ''}
+        <div class="learn-title">${plan.topic}</div>
+        <div class="learn-desc">${plan.desc}</div>
+        ${plan.resources.map(r => `
+          <a class="learn-link" href="${r.url}" target="_blank">
+            <i class="ti ti-external-link" style="font-size:14px"></i>${r.label}
+          </a>
+          <div style="font-size:12px;color:var(--gray-muted);margin-bottom:8px;padding-left:20px">${r.note}</div>
+        `).join('')}
+        <div class="learn-task">
+          <div class="learn-task-title">✅ Today's tasks (${tasksDoneCount}/${plan.tasks.length} done)</div>
+          ${plan.tasks.map((t, ti) => {
+            const key = `plan-${pi}-${ti}`;
+            const done = !!state.tasksDone[key];
+            return `<div class="task-row" onclick="toggleTask('${key}')">
+              <div class="task-check ${done ? 'done' : ''}">${done ? '<i class="ti ti-check" style="font-size:9px"></i>' : ''}</div>
+              <span style="${done ? 'text-decoration:line-through;opacity:0.5' : ''}">${t}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById('learn-content').innerHTML = html;
+}
+
+function renderMotivation() {
+  const q = QUOTES[state.selectedDay % QUOTES.length];
+  const aff = AFFIRMATIONS[new Date().getDay() % AFFIRMATIONS.length];
+
+  let calledTotal = 0;
+  Object.keys(state.called).forEach(k => { if (state.called[k]) calledTotal++; });
+  let tasksTotal = 0;
+  Object.keys(state.checked).forEach(k => { if (state.checked[k]) tasksTotal++; });
+  let learnTotal = 0;
+  Object.keys(state.tasksDone).forEach(k => { if (state.tasksDone[k]) learnTotal++; });
+
+  document.getElementById('motivate-content').innerHTML = `
+    <div class="affirmation">"${aff}"</div>
+
+    <div class="motivation-card">
+      <h3>💚 A message for you, Rafia</h3>
+      <p>What's happening to you is not a reflection of your worth. Three years of UK work experience is genuinely impressive. The rejections you're facing are not about you being "not good enough" — they're about finding the right match. Keep going. Every single call, every skill learned, every day you show up for yourself brings you closer.</p>
+    </div>
+
+    <div class="section-title">Your stats 🔥</div>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">${calledTotal}</div>
+        <div class="stat-label">Agencies contacted</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">${tasksTotal}</div>
+        <div class="stat-label">Routine tasks done</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">${learnTotal}</div>
+        <div class="stat-label">Learning tasks done</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">${state.selectedDay + 1}</div>
+        <div class="stat-label">Days in the plan</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:20px">Today's quote</div>
+    <div class="script-box">"${q}"</div>
+
+    <div class="motivation-card" style="margin-top:12px">
+      <h3>📱 Save this to your home screen</h3>
+      <p>On iPhone: tap the Share button → "Add to Home Screen".<br>On Android: tap the menu (3 dots) → "Add to Home Screen".<br><br>Then Rafia's plan is always one tap away!</div>
+    </div>
+
+    <div class="tip-box" style="margin-top: 0">
+      <strong>Reminder from your friend:</strong> You took a break, you're building your skills, you're calling every day. That is not someone giving up — that is someone fighting back. You've got this. 💪
+    </div>
+  `;
+}
+
+function renderHeader() {
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  document.getElementById('header-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  const q = QUOTES[state.selectedDay % QUOTES.length];
+  document.getElementById('daily-quote').textContent = q;
+}
+
+function switchTab(tab) {
+  state.tab = tab;
+  ['schedule','calls','learn','motivate'].forEach(t => {
+    document.getElementById('content-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+  renderAll();
+}
+
+function renderAll() {
+  renderDays();
+  renderHeader();
+  renderNowCard();
+  renderSchedule();
+  renderProgress();
+  if (state.tab === 'calls') renderCalls();
+  if (state.tab === 'learn') renderLearn();
+  if (state.tab === 'motivate') renderMotivation();
+}
+
+// Auto-detect today
+const today = new Date().toISOString().split('T')[0];
+const todayIdx = DAYS.findIndex(d => d.date === today);
+if (todayIdx >= 0) state.selectedDay = todayIdx;
+
+renderAll();
+setInterval(() => { renderNowCard(); }, 60000);
+</script>
+</body>
+</html>
